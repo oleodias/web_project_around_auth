@@ -35,10 +35,10 @@ export default function Main(props) {
     children: <EditAvatar />,
   };
 
-  // O pop-up da imagem não tem título: o <Popup> usa isso para aplicar o
-  // modificador de imagem e não desenhar o <h3>.
+  // O pop-up da imagem não tem título, e o type 'image' dá ao <Popup> o
+  // modificador de imagem.
   function handleCardClick(card) {
-    onOpenPopup({ children: <ImagePopup card={card} /> });
+    onOpenPopup({ type: 'image', children: <ImagePopup card={card} /> });
   }
 
   // A lixeira não exclui direto: abre o "Tem certeza?", e só o envio desse
@@ -98,7 +98,7 @@ export default function Main(props) {
       </section>
 
       {popup && (
-        <Popup onClose={onClosePopup} title={popup.title}>
+        <Popup onClose={onClosePopup} title={popup.title} type={popup.type}>
           {popup.children}
         </Popup>
       )}
