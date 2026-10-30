@@ -47,6 +47,52 @@ linhas:
 
 ![Telas no celular](docs/screenshots/celular.png)
 
+### Resumo
+
+- **O que foi construído e por quê:** a camada de autenticação do Around em
+  React: cadastro, login e logout com JWT, um `ProtectedRoute` que só libera a
+  galeria para quem entrou e o token guardado no `localStorage`, para que cada
+  pessoa tenha acesso à própria conta.
+- **Problema que resolve:** impede o acesso à galeria sem login, avisa na tela
+  quando o cadastro dá certo ou o login falha (401), mantém a sessão ao
+  recarregar (o token é conferido com o servidor) e oferece um menu próprio no
+  celular.
+- **Tecnologias:** React 19 (hooks e Context API), React Router 6, JWT com
+  `Authorization: Bearer`, `localStorage`, Fetch API, Vite 8, CSS com BEM Flat,
+  Prettier e oxlint.
+
+---
+
+## 🎬 Demonstração em vídeo
+
+> 🔗 **Vídeo:** [assistir no Google Drive](https://drive.google.com/file/d/12BrX-norUG9zt-wRWkC5zVKYklAEfAOV/view?usp=sharing)
+
+Vídeo de **2min05** (1080p, 60 fps, legendas em português) com o código deste
+repositório, **sem alterações**, rodando com `npm run dev` e ligado às **APIs
+reais** da TripleTen: a de autenticação e a do Around.
+
+| Capítulo             | O que aparece                                                | Onde está no código                            |
+| -------------------- | ------------------------------------------------------------ | ---------------------------------------------- |
+| 01 · Rota protegida  | abrir `/` sem login leva a `/signin`                         | `ProtectedRoute`                               |
+| 02 · Cadastro        | conta nova criada ao vivo (`POST /signup` → 201) e o aviso   | `Register`, `auth.register`, `InfoTooltip`     |
+| 03 · Erro no login   | senha errada (`POST /signin` → 401) e o aviso de erro        | `handleLogin` no `App`                         |
+| 04 · Login com JWT   | token salvo, e-mail no cabeçalho e galeria carregando        | `auth.authorize`, `setToken`                   |
+| 05 · Sessão lembrada | recarregar e continuar logado (`GET /users/me` com `Bearer`) | `useEffect` com `getToken` e `isCheckingToken` |
+| 06 · Galeria         | curtir e descurtir, como no Projeto 14                       | `api.changeLikeStatus`                         |
+| 07 · No celular      | o menu de três linhas com o e-mail e o "Sair" (390px)        | `Header` (`header__menu-button`)               |
+| 08 · Sair            | token apagado e `/` volta a ser protegida                    | `handleSignOut`, `removeToken`                 |
+
+**Como o vídeo foi feito:** a tela é uma gravação real do navegador
+(Playwright). A barra de endereço e o indicador "jwt ✓ salvo / jwt —" mostram a
+URL e o estado do token registrados durante a própria gravação. Por cima há só
+uma camada de _motion_ (câmera, cursor, setas, destaques, legendas e
+capítulos), feita com Python, Cairo e ffmpeg. A conta de demonstração usa um
+e-mail fictício; a senha aparece só como pontos, e o JWT e o token do curso
+nunca aparecem.
+
+**Trilha sonora:** original, composta e sintetizada por código para o vídeo
+(sem samples nem músicas de terceiros), sincronizada com as animações.
+
 ---
 
 ## 🚩 Sprint 17 — Como a autenticação funciona
