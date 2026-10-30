@@ -1,189 +1,103 @@
-# ⚛️ Around The U.S. em React
+# 🔐 Around The U.S. — Cadastro e login em React
 
 ## 📅 Sprints
 
-Projeto das **Sprints 13 e 14** do curso de Desenvolvimento Web da TripleTen
-Brasil. É a reescrita em React do projeto das Sprints 8 a 12
-([`web_project_around_pt`](https://github.com/oleodias/web_project_around_pt));
-o back-end está em
+Projeto da **Sprint 17** do curso de Desenvolvimento Web da TripleTen Brasil.
+Parte do código do Projeto 14
+([`web_project_around_react`](https://github.com/oleodias/web_project_around_react),
+Sprints 13 e 14), que por sua vez reescreveu em React o projeto das Sprints 8
+a 12 ([`web_project_around_pt`](https://github.com/oleodias/web_project_around_pt)).
+O back-end próprio está em
 [`web_project_around_express`](https://github.com/oleodias/web_project_around_express)
 (Sprints 15 e 16).
 
-| Sprint | O que foi feito neste repositório |
-| --- | --- |
-| 13 | projeto criado com a Vite, marcação em JSX, componentes e um pop-up único |
-| 14 | a classe `Api`, o `CurrentUserContext`, o estado elevado ao `App` e os formulários salvando no servidor |
+| Sprint | O que foi feito neste repositório                                                                                                                                   |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 17     | cadastro, login e logout com JWT, rotas protegidas, `localStorage`, aviso de sucesso/erro e o cabeçalho para visitantes e usuários logados, com versão para celular |
 
 ---
 
 ## 📝 Descrição do Projeto
 
-**Around The U.S.** é a galeria de lugares construída ao longo das Sprints 8 a
-12 do curso de Desenvolvimento Web da TripleTen Brasil — perfil, cartões com
-fotos e pop-ups para editar, adicionar, ampliar e excluir. Aqui, a página é
-**reescrita em React**: a mesma interface, montada com componentes e ligada
-ao servidor.
+**Around The U.S.** é a galeria de lugares do curso: perfil, cartões com fotos,
+curtidas e pop-ups para editar, adicionar, ampliar e excluir. Nesta etapa, a
+galeria passou a exigir **cadastro e login**: só quem entrou vê a página
+principal, e o login fica lembrado entre as visitas.
 
-### Resumo
+![Tela de login](docs/screenshots/login.png)
 
-- **O que foi construído e por quê:** a interface em React ligada à API do
-  curso por uma classe `Api` (Fetch + promessas). O estado fica no `App` e o
-  usuário atual é compartilhado pelo `CurrentUserContext`, para que os
-  componentes só avisem e o `App` decida.
-- **Problema que resolve:** editar perfil e avatar, adicionar, curtir e excluir
-  lugares (com confirmação), sempre sincronizados com o servidor, com retorno
-  visual ("Salvando..." / "Excluindo...") e sem recarregar a página.
-- **Tecnologias:** React 19 (`useState`, `useEffect`, `useContext`, `useRef`),
-  Context API, Fetch API, Vite 8, CSS3 com BEM, Prettier e oxlint.
+### O que o usuário pode fazer
 
----
+- **Cadastrar-se** em `/signup` com e-mail e senha. Um aviso informa se deu
+  certo ou não; depois do sucesso, o app leva ao login
+- **Entrar** em `/signin`. O app recebe um **JWT**, guarda no `localStorage` e
+  abre a galeria em `/`
+- **Continuar logado** ao recarregar ou voltar outro dia: na abertura, o app
+  confere o token com o servidor e mostra o e-mail no cabeçalho
+- **Sair**: o token é apagado e o app volta ao login
+- Tudo o que já existia: editar perfil e foto, adicionar, curtir e excluir
+  cartões
 
-## 🎬 Demonstração em vídeo
+| Cadastro concluído                                                    | Logado                                                            |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| ![Aviso de cadastro concluído](docs/screenshots/cadastro-sucesso.png) | ![Galeria com o e-mail no cabeçalho](docs/screenshots/logado.png) |
 
-> 🔗 **Vídeo:** [assistir no Google Drive](https://drive.google.com/file/d/1EGtub2g7qDvHV19oeg9nm5BccYl0sHdC/view?usp=drive_link)
+No celular, o e-mail e o "Sair" ficam num menu aberto pelo botão de três
+linhas:
 
-Vídeo de **1min55** (1080p, 60 fps, legendas em português) com o estado atual
-da Sprint 14: o código deste repositório, rodando com `npm run dev`, com a
-única diferença de que o token foi movido para uma variável de ambiente, e
-ligado à **API real** da TripleTen. Os perfis, os cartões e as
-fotos são os dados da conta do curso.
-
-| Capítulo | O que aparece | Onde está no código |
-| --- | --- | --- |
-| 01 · Dados da API | perfil e cartões chegam uma vez, na montagem | `useEffect` com `[]` no `App` |
-| 02 · Curtidas | curtir e descurtir | `changeLikeStatus` + `map` no estado |
-| 03 · Editar perfil | formulário já preenchido, "Salvando...", tela atualizada | `EditProfile` (controlado) + `CurrentUserContext` |
-| 04 · Foto do perfil | troca do avatar | `EditAvatar` (campo lido por `useRef`) |
-| 05 · Novo local | o cartão novo entra no início da lista | `[newCard, ...state]` |
-| 06 · Excluir cartão | "Tem certeza?" e "Excluindo..." | `RemoveCard` + `filter` no estado |
-| 07 · Pop-ups | foto ampliada; fecha com X, Esc ou clique no fundo | `Popup` e `ImagePopup` |
-
-**Como o vídeo foi feito:** a tela é uma gravação real do navegador
-(Playwright, em 2744×1544). Por cima dela há só uma camada de *motion* (câmera,
-cursor, setas, destaques, legendas e capítulos), feita com Python, Cairo e
-ffmpeg. Nenhuma tela foi simulada ou redesenhada. Os scripts de gravação não
-fazem parte deste repositório.
-
-**Trilha sonora:** original, composta e sintetizada por código para o vídeo
-(sem samples nem músicas de terceiros). É um lo-fi a 92 BPM sincronizado com as
-animações: a batida entra quando o app ocupa a tela, cada capítulo tem uma
-transição sonora e cada destaque toca uma nota do acorde.
+![Telas no celular](docs/screenshots/celular.png)
 
 ---
 
-## 🚩 Sprint 13 — Primeiros componentes
-
-- Projeto criado com a **Vite** (React + JavaScript), porta **3000** e o
-  navegador abrindo sozinho no `npm run dev`
-- Marcação do projeto anterior convertida em **JSX** e dividida em
-  componentes
-- Estilos, imagens e fontes reaproveitados: pastas `blocks`, `images` e
-  `vendor`, conectadas pelo `index.css`
-- **Um componente `Popup`** para todos os pop-ups: recebe o título e o
-  conteúdo (`children`) e fecha pelo X
-- Cinco conteúdos de pop-up: editar perfil, novo local, trocar a foto,
-  confirmar exclusão e imagem ampliada
-
-### Como os pop-ups funcionam
-
-Um **único estado**, `popup`, que começa em `null` (na Sprint 13 ele ficava no
-`Main`; na 14, subiu para o `App`):
-
-```jsx
-const [popup, setPopup] = useState(null);
-```
-
-Cada pop-up é um objeto `{ title, children }`. Clicar num botão guarda esse
-objeto no estado; o X volta o estado para `null`. O `Popup` só aparece
-quando há algo guardado:
-
-```jsx
-{
-  popup && (
-    <Popup onClose={handleClosePopup} title={popup.title}>
-      {popup.children}
-    </Popup>
-  );
-}
-```
-
-O pop-up da imagem é o único sem título — e é isso que o `Popup` usa para
-aplicar o estilo de imagem e não desenhar o `<h3>`.
-
-### Componentes
-
-| Componente                                           | O que faz                                            |
-| ---------------------------------------------------- | ---------------------------------------------------- |
-| `App`                                                | estados, solicitações à API e o provedor do contexto |
-| `Header`                                             | o logotipo                                           |
-| `Main`                                               | perfil, lista de cartões e o pop-up aberto           |
-| `Footer`                                             | o rodapé                                             |
-| `Card`                                               | um cartão: imagem, curtida e lixeira (só do dono)    |
-| `Popup`                                              | a moldura comum: X, título e conteúdo                |
-| `EditProfile`, `NewCard`, `EditAvatar`, `RemoveCard` | os formulários de cada pop-up                        |
-| `ImagePopup`                                         | a imagem ampliada e a legenda                        |
-
----
-
-## 🚩 Sprint 14 — Dados, contexto e servidor
-
-- A classe `Api` da Sprint 12 em `src/utils/api.js`, exportada como **uma
-  instância** já configurada
-- Perfil e cartões vêm do servidor, **pedidos uma vez só**, na montagem do
-  `App`
-- **`CurrentUserContext`** (`src/contexts`): o `Main` e o `Card` leem o
-  usuário atual sem receber props por vários níveis
-- **Estado elevado ao `App`**: `currentUser`, `cards`, `popup` e todas as
-  solicitações à API ficam nele; o `Main` recebe dados e funções por props
-- Curtir e descurtir; excluir só os próprios cartões, depois do
-  "Tem certeza?"
-- Editar o perfil (formulário **controlado**, já preenchido), trocar a foto
-  (campo lido por **ref**) e adicionar cartões, que entram no início da lista
-- Os botões mostram "Salvando..." / "Excluindo..." enquanto o servidor
-  responde; os pop-ups fecham também com **Esc** e com clique no fundo
-
-### Para onde vão os dados
+## 🚩 Sprint 17 — Como a autenticação funciona
 
 ```
-App ── currentUser, cards, popup, isLoading
- │       e as funções que chamam a API
- ├─ CurrentUserContext.Provider value={{ currentUser, handleUpdateUser,
- │                                        handleUpdateAvatar, isLoading }}
- └─ Main ── props: cards, popup, onCardLike, onCardDelete, onAddPlaceSubmit…
-     ├─ Card ── avisa: onCardClick / onCardLike / onCardDelete (card)
-     └─ Popup ── EditProfile, EditAvatar (contexto) · NewCard, RemoveCard (props)
+abrir o app ── há token no localStorage? ── não ──▶ /signin
+                         │ sim
+                         ▼
+               GET /users/me (Bearer token) ── inválido ──▶ apaga o token, /signin
+                         │ válido
+                         ▼
+               isLoggedIn = true, e-mail no cabeçalho, perfil e cartões
 ```
 
-Os componentes **avisam**, e o `App` **decide**: chama a API e, com a
-resposta, atualiza o estado. A tela se redesenha sozinha. Nenhum estado é
-alterado no lugar: curtir troca o cartão com `map`, excluir cria a lista nova
-com `filter`, e adicionar faz `[newCard, ...state]`.
+| Peça                 | Papel                                                                                                           |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `utils/auth.js`      | `register`, `authorize` e `getUserData` na API de autenticação da TripleTen (`/signup`, `/signin`, `/users/me`) |
+| `utils/token.js`     | `setToken`, `getToken` e `removeToken` no `localStorage`                                                        |
+| `ProtectedRoute`     | envolve a rota `/`: sem login, `<Navigate to='/signin' replace />`                                              |
+| `Register` e `Login` | formulários controlados (`email`, `password`); só entregam os dados ao `App`                                    |
+| `InfoTooltip`        | o aviso de sucesso ou erro, com a moldura dos outros pop-ups                                                    |
+| `App`                | todas as solicitações, as rotas, `isLoggedIn`, `email` e os manipuladores `onRegister`, `onLogin` e `onSignOut` |
 
 ### Decisões
 
-| Decisão                                                                         | Motivo                                                                                                          |
-| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Sem `<StrictMode>` no `main.jsx`                                                | Em desenvolvimento, ele monta tudo duas vezes, e as duas solicitações iniciais apareceriam em dobro na aba Rede |
-| `.then().catch()` em vez de `async` + `await` + `.then()`                       | O exemplo da descrição mistura os dois estilos; um só faz o mesmo e se lê melhor                                |
-| Nomes dos métodos da `Api` da Sprint 12 (`getInitialCards`, `changeLikeStatus`) | A descrição manda colar a classe do projeto anterior                                                            |
-| A lixeira abre o "Tem certeza?"                                                 | O pop-up já existia, e a conclusão da descrição sugere usá-lo                                                   |
-| Sem `noValidate` nos formulários                                                | Assim o navegador bloqueia campo vazio e link inválido antes de qualquer solicitação                            |
-| `onMouseDown` no fundo do pop-up                                                | Selecionar texto dentro do campo e soltar fora não fecha o pop-up                                               |
+| Decisão                                                                                                 | Motivo                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Duas APIs                                                                                               | A de autenticação só tem `/signup`, `/signin` e `/users/me` (conferido: `/cards` responde 404). Perfil e cartões continuam na API do Around, como no Projeto 14       |
+| Estado `isCheckingToken`                                                                                | Enquanto o servidor confere o token salvo, as rotas não são desenhadas. Sem isso, quem já entrou passaria pela tela de login a cada recarga (conferido que não passa) |
+| Token salvo no **login**                                                                                | É a resposta do `/signin` que traz o token; o cadastro só devolve o e-mail e o `_id`                                                                                  |
+| Token inválido ou vencido é apagado                                                                     | Senão o app tentaria de novo a cada visita                                                                                                                            |
+| Perfil e cartões pedidos quando o usuário entra                                                         | Uma solicitação de cada: na abertura, se o token vale, ou logo depois do login                                                                                        |
+| `/signup` e `/signin` fora do `ProtectedRoute`                                                          | Pedido do checklist; quem já entrou é mandado para `/`                                                                                                                |
+| Link do cabeçalho na tela de login: **"Inscrever-se"**                                                  | O design traz "Entrar", que levaria à própria página; o link certo é o do cadastro                                                                                    |
+| Mensagens do aviso: "Vitória! Você se registrou." e "Ops, algo deu errado! Por favor, tente novamente." | O design diz "Você precisa se registrar" (o contrário do que aconteceu) e "algo saiu deu errado"                                                                      |
+| O aviso de erro também aparece quando o login falha                                                     | Senha errada ou usuário inexistente (401) precisam de resposta na tela                                                                                                |
+| `no-undef` ativado no oxlint                                                                            | O modelo da Vite não traz essa regra, e uma variável indefinida só aparecia ao rodar                                                                                  |
 
 ---
 
 ## 🛠 Tecnologias Utilizadas
 
-- **React 19** com componentes funcionais e os hooks `useState`, `useEffect`,
-  `useContext` e `useRef`; Context API
-- **Fetch API** com promessas, numa classe `Api`
-- **JSX**: `className`, expressões entre chaves, `map` com `key`,
-  renderização condicional com `&&` e com o operador ternário
-- **Vite 8**: servidor de desenvolvimento, `import` de imagens e CSS, build
-  de produção
-- **CSS3 com BEM Flat**: um arquivo por bloco em `src/blocks`
-- **Normalize.css** e a fonte **Inter** em `.woff2`
-- **Prettier** (aspas simples) e **oxlint**
+- **React 19** com componentes funcionais e os hooks `useState`,
+  `useEffect`, `useContext` e `useRef`; Context API
+- **React Router 6**: `Routes`, `Route`, `Navigate`, `Link`, `useNavigate`,
+  `useLocation`
+- **JWT** no cabeçalho `Authorization: Bearer <token>`, guardado no
+  `localStorage`
+- **Fetch API** com promessas
+- **Vite 8**, **CSS com BEM Flat** (um arquivo por bloco), **Prettier** e
+  **oxlint**
 
 ---
 
@@ -191,33 +105,25 @@ com `filter`, e adicionar faz `[newCard, ...state]`.
 
 ```
 src/
-├── blocks/                         ← CSS, um arquivo por bloco BEM
-├── images/
-├── vendor/                         ← normalize.css e a fonte Inter
+├── blocks/                         ← CSS por bloco (auth.css é novo)
 ├── components/
-│   ├── App.jsx
+│   ├── App.jsx                     ← rotas, estados e solicitações
 │   ├── Header/Header.jsx
 │   ├── Footer/Footer.jsx
-│   └── Main/
-│       ├── Main.jsx
-│       └── components/
-│           ├── Card/Card.jsx
-│           └── Popup/
-│               ├── Popup.jsx
-│               └── components/
-│                   ├── EditAvatar/EditAvatar.jsx
-│                   ├── EditProfile/EditProfile.jsx
-│                   ├── ImagePopup/ImagePopup.jsx
-│                   ├── NewCard/NewCard.jsx
-│                   └── RemoveCard/RemoveCard.jsx
+│   ├── Register/Register.jsx
+│   ├── Login/Login.jsx
+│   ├── ProtectedRoute/ProtectedRoute.jsx
+│   ├── InfoTooltip/InfoTooltip.jsx
+│   └── Main/                       ← galeria, Card, Popup e os pop-ups
 ├── contexts/CurrentUserContext.js
-├── utils/api.js                    ← classe Api e a instância exportada
+├── images/
+├── utils/
+│   ├── api.js                      ← API do Around (perfil e cartões)
+│   ├── auth.js                     ← cadastro, login e /users/me
+│   └── token.js                    ← o JWT no localStorage
 ├── index.css
-└── main.jsx
+└── main.jsx                        ← BrowserRouter
 ```
-
-Cada componente fica na pasta de quem o usa: o `Card` e o `Popup` dentro de
-`Main`, os conteúdos dos pop-ups dentro de `Popup`.
 
 ---
 
@@ -228,24 +134,20 @@ npm install
 npm run dev
 ```
 
-O navegador abre sozinho em `http://localhost:3000`. Os dados vêm da API do
-curso (`around-api.pt-br.tripleten-services.com`). Crie um arquivo .env na
-raiz, copiando o .env.example, e coloque o token fornecido pelo curso em
-VITE_API_TOKEN.
+O navegador abre em `http://localhost:3000`. Os cartões e o perfil vêm da API
+do Around: crie um arquivo .env na raiz, copiando o .env.example, e coloque o
+token fornecido pelo curso em VITE_API_TOKEN. O cadastro e o login não
+precisam de token.
 
-Para o build de produção:
+---
 
-```bash
-npm run build
-npm run preview
-```
+## 📈 Próximos passos
+
+1. Ligar o app ao back-end próprio (Sprint 18)
+2. Mensagens de validação nos campos dos formulários
 
 ---
 
 ## 👤 Autor
 
 **Leonardo Dias Caumo** — _Desenvolvido como parte do portfólio de estudos em Desenvolvimento Web da TripleTen Brasil._
-
----
-
-© 2026 Leonardo Dias Caumo
