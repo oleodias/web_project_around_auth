@@ -15,6 +15,11 @@ O back-end próprio está em
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 17     | cadastro, login e logout com JWT, rotas protegidas, `localStorage`, aviso de sucesso/erro e o cabeçalho para visitantes e usuários logados, com versão para celular |
 
+Na **Sprint 18**, o projeto continua em
+[`web_project_api_full`](https://github.com/oleodias/web_project_api_full),
+que junta este código (na pasta `frontend/`, agora falando com a API própria) com o back-end dos Projetos 15 e 16 e publica os dois num servidor
+com domínio e HTTPS.
+
 ---
 
 ## 📝 Descrição do Projeto
