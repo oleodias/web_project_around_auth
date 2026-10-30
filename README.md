@@ -131,13 +131,21 @@ src/
 
 ```bash
 npm install
+cp .env.example .env   # depois troque o valor de VITE_API_TOKEN pelo token do curso
 npm run dev
 ```
 
-O navegador abre em `http://localhost:3000`. Os cartões e o perfil vêm da API
-do Around: crie um arquivo .env na raiz, copiando o .env.example, e coloque o
-token fornecido pelo curso em VITE_API_TOKEN. O cadastro e o login não
-precisam de token.
+O navegador abre em `http://localhost:3000`.
+
+> 🔑 **Revisor(a):** o perfil e os cartões vêm da API do Around, que exige o
+> token do curso. Ele **não está no repositório de propósito**: um token
+> versionado fica público no histórico do GitHub. Coloque-o no `.env`, na
+> variável `VITE_API_TOKEN` (o mesmo token usado nos Projetos 13 e 14), e
+> reinicie o `npm run dev`, porque o Vite só lê o `.env` ao iniciar.
+>
+> Sem o token, o cadastro, o login, as rotas protegidas e o "Sair" funcionam
+> normalmente (a API de autenticação não precisa dele); só a galeria e o
+> perfil ficam vazios.
 
 ---
 
