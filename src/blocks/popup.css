@@ -212,3 +212,40 @@
 .popup__form_type_confirm {
   margin-top: 0;
 }
+
+/* Aviso do cadastro e do login (InfoTooltip): ícone de 120px centralizado e
+   a mensagem embaixo, com as medidas do design (430×330 no computador,
+   280×308 no celular). */
+.popup__content_content_tooltip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 330px;
+  padding: 60px 36px;
+}
+
+.popup__icon {
+  width: 120px;
+  height: 120px;
+}
+
+.popup__message {
+  margin: 32px 0 0;
+  font-size: 24px;
+  line-height: 29px;
+  font-weight: 900;
+  text-align: center;
+}
+
+@media screen and (max-width: 544px) {
+  .popup__content_content_tooltip {
+    min-height: 308px;
+    padding: 50px 18px;
+  }
+
+  .popup__message {
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
