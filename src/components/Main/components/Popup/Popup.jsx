@@ -2,8 +2,10 @@ import { useEffect } from 'react';
 
 export default function Popup(props) {
   // children é o conteúdo do pop-up; onClose vem do App e volta o estado do
-  // pop-up para null.
-  const { onClose, title, children } = props;
+  // pop-up para null. type escolhe o formato do quadro: sem type, o
+  // formulário; 'image', a imagem ampliada; 'tooltip', o aviso do cadastro
+  // e do login.
+  const { onClose, title, type, children } = props;
 
   // Esc fecha. O ouvinte só existe enquanto o pop-up está na tela: a função
   // devolvida pelo efeito o remove quando o pop-up sai.
@@ -29,7 +31,7 @@ export default function Popup(props) {
     <div className='popup' onMouseDown={handleOverlayClick}>
       <div
         className={`popup__content ${
-          !title ? 'popup__content_content_image' : ''
+          type ? `popup__content_content_${type}` : ''
         }`}
       >
         <button

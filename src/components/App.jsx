@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './Header/Header.jsx';
 import Main from './Main/Main.jsx';
 import Footer from './Footer/Footer.jsx';
+import Register from './Register/Register.jsx';
+import Login from './Login/Login.jsx';
+import ProtectedRoute from './ProtectedRoute/ProtectedRoute.jsx';
+import InfoTooltip from './InfoTooltip/InfoTooltip.jsx';
 import api from '../utils/api.js';
+import * as auth from '../utils/auth.js';
+import { getToken, removeToken, setToken } from '../utils/token.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
 function App() {
@@ -13,20 +20,100 @@ function App() {
   const [popup, setPopup] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // [] = só na montagem: uma solicitação de cada, nunca a cada renderização.
+  // Autenticação. email é o do usuário logado, para o cabeçalho.
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  // Começa true quando há um token salvo: até o servidor responder se ele
+  // vale, as rotas não são desenhadas. Sem isso, quem já entrou passaria por
+  // /signin por um instante a cada recarga.
+  const [isCheckingToken, setIsCheckingToken] = useState(() =>
+    Boolean(getToken()),
+  );
+  // O aviso do cadastro e do login: null (fechado) ou { isSuccess }.
+  const [tooltip, setTooltip] = useState(null);
+
+  const navigate = useNavigate();
+
+  // Na montagem: se há um token salvo, pergunta ao servidor se ele vale e
+  // pega o e-mail. Token vencido ou inválido é apagado.
   useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      return;
+    }
+
+    auth
+      .getUserData(token)
+      .then(({ data }) => {
+        setEmail(data.email);
+        setIsLoggedIn(true);
+      })
+      .catch((error) => {
+        removeToken();
+        console.error(error);
+      })
+      .finally(() => setIsCheckingToken(false));
+  }, []);
+
+  // Perfil e cartões: uma solicitação de cada quando o usuário entra (na
+  // montagem, se o token salvo vale; ou logo depois do login).
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+
     api
       .getUserInfo()
       .then((userData) => setCurrentUser(userData))
       .catch((error) => console.error(error));
-  }, []);
 
-  useEffect(() => {
     api
       .getInitialCards()
       .then((cardsData) => setCards(cardsData))
       .catch((error) => console.error(error));
-  }, []);
+  }, [isLoggedIn]);
+
+  function handleRegister({ email: newEmail, password }) {
+    auth
+      .register(newEmail, password)
+      .then(() => setTooltip({ isSuccess: true }))
+      .catch((error) => {
+        console.error(error);
+        setTooltip({ isSuccess: false });
+      });
+  }
+
+  function handleLogin({ email: loginEmail, password }) {
+    auth
+      .authorize(loginEmail, password)
+      .then(({ token }) => {
+        setToken(token); // o JWT é salvo no login, que é onde ele chega
+        setEmail(loginEmail);
+        setIsLoggedIn(true);
+        navigate('/', { replace: true });
+      })
+      .catch((error) => {
+        console.error(error);
+        setTooltip({ isSuccess: false });
+      });
+  }
+
+  function handleSignOut() {
+    removeToken();
+    setIsLoggedIn(false);
+    setEmail('');
+    setCurrentUser({});
+    setCards([]);
+    navigate('/signin', { replace: true });
+  }
+
+  // Depois de um cadastro bem-sucedido, fechar o aviso leva ao login.
+  function handleCloseTooltip() {
+    if (tooltip?.isSuccess) {
+      navigate('/signin');
+    }
+    setTooltip(null);
+  }
 
   // selectedPopup, e não popup: o mesmo nome esconderia o estado acima.
   function handleOpenPopup(selectedPopup) {
@@ -112,17 +199,64 @@ function App() {
       value={{ currentUser, handleUpdateUser, handleUpdateAvatar, isLoading }}
     >
       <div className='page__content'>
-        <Header />
-        <Main
-          cards={cards}
-          popup={popup}
-          onOpenPopup={handleOpenPopup}
-          onClosePopup={handleClosePopup}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          onAddPlaceSubmit={handleAddPlaceSubmit}
+        <Header
+          email={email}
+          isLoggedIn={isLoggedIn}
+          onSignOut={handleSignOut}
         />
-        <Footer />
+        {!isCheckingToken && (
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <Main
+                    cards={cards}
+                    popup={popup}
+                    onOpenPopup={handleOpenPopup}
+                    onClosePopup={handleClosePopup}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                    onAddPlaceSubmit={handleAddPlaceSubmit}
+                  />
+                  <Footer />
+                </ProtectedRoute>
+              }
+            />
+            {/* /signup e /signin ficam fora do ProtectedRoute; quem já entrou
+                é mandado para a página principal. */}
+            <Route
+              path='/signup'
+              element={
+                isLoggedIn ? (
+                  <Navigate to='/' replace />
+                ) : (
+                  <Register onRegister={handleRegister} />
+                )
+              }
+            />
+            <Route
+              path='/signin'
+              element={
+                isLoggedIn ? (
+                  <Navigate to='/' replace />
+                ) : (
+                  <Login onLogin={handleLogin} />
+                )
+              }
+            />
+            <Route
+              path='*'
+              element={<Navigate to={isLoggedIn ? '/' : '/signin'} replace />}
+            />
+          </Routes>
+        )}
+        {tooltip && (
+          <InfoTooltip
+            isSuccess={tooltip.isSuccess}
+            onClose={handleCloseTooltip}
+          />
+        )}
       </div>
     </CurrentUserContext.Provider>
   );
