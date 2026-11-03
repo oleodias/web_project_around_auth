@@ -1,5 +1,7 @@
 # 🔐 Around The U.S. — Cadastro e login em React
 
+> 🎬 **Vídeo de demonstração (2 min):** https://drive.google.com/file/d/12BrX-norUG9zt-wRWkC5zVKYklAEfAOV/view
+
 ## 📅 Sprints
 
 Projeto da **Sprint 17** do curso de Desenvolvimento Web da TripleTen Brasil.
